@@ -2,11 +2,11 @@ from django.db import models
 
 
 class Scooter(models.Model):
-    model = models.CharField(blank=False, null=False, unique=True)
+    model = models.CharField(blank=False, null=False, unique=True, max_length=50)
     producer = models.ForeignKey('Producer', models.CASCADE, 'scooters')
-    maxSpeed = models.PositiveSmallIntegerField(blank=False, null=False)
+    max_speed = models.PositiveSmallIntegerField(blank=False, null=False)
     power = models.PositiveSmallIntegerField(blank=False, null=False)
-    batteryCapacity = models.PositiveIntegerField(blank=False, null=False)
+    battery_capacity = models.PositiveIntegerField(blank=False, null=False)
     pic = models.ImageField(null=True, blank=True, upload_to='products', default=None)
 
     def __str__(self):
@@ -14,8 +14,8 @@ class Scooter(models.Model):
 
 
 class Motorcycle(models.Model):
-    MOTORCYCLE_TYPE_CHOICES = {'classic': 1, 'sport bike': 2, 'street bike': 3, 'cross bike': 4, 'cruiser': 5}
-    model = models.CharField(blank=False, null=False, unique=True)
+    MOTORCYCLE_TYPE_CHOICES = ((1, 'classic'), (2, 'sport bike'), (3, 'street bike'), (4, 'cross bike'), (5, 'cruiser'))
+    model = models.CharField(blank=False, null=False, unique=True, max_length=50)
     producer = models.ForeignKey('Producer', models.CASCADE, 'motorcycles')
     type = models.PositiveSmallIntegerField(blank=False, null=False, default=1, choices=MOTORCYCLE_TYPE_CHOICES)
     cylinders = models.PositiveSmallIntegerField(blank=False, null=False)
@@ -28,9 +28,9 @@ class Motorcycle(models.Model):
 
 
 class Car(models.Model):
-    CAR_TYPE_CHOICES = {'sedan': 1, 'hatchback': 2, 'SUV': 3, 'station wagon': 4, 'coupe': 5, 'minivan': 6}
-    CAR_DRIVE_CHOICES = {'rear': 1, 'foward': 2, 'full': 3}
-    model = models.CharField(blank=False, null=False, unique=True)
+    CAR_TYPE_CHOICES = ((1, 'sedan'), (2, 'hatchback'), (3, 'SUV'), (4, 'station wagon'), (5, 'coupe'), (6, 'minivan'))
+    CAR_DRIVE_CHOICES = ((1, 'rear'), ( 2, 'foward'), (3, 'full'))
+    model = models.CharField(blank=False, null=False, unique=True, max_length=50)
     producer = models.ForeignKey('Producer', models.CASCADE, 'cars')
     year = models.PositiveSmallIntegerField(blank=False, null=False)
     type = models.PositiveSmallIntegerField(blank=False, null=False, choices=CAR_TYPE_CHOICES)
@@ -44,9 +44,9 @@ class Car(models.Model):
 
 
 class Producer(models.Model):
-    name = models.CharField(blank=False, null=False, unique=True)
-    country = models.CharField(blank=True, null=True)
-    website = models.CharField(blank=True, null=True)
+    name = models.CharField(blank=False, null=False, unique=True, max_length=50)
+    country = models.CharField(blank=True, null=True, max_length=100)
+    website = models.CharField(blank=True, null=True, max_length=100)
 
     def __str__(self):
         return self.name
@@ -57,35 +57,37 @@ class Ad(models.Model):
         abstract = True
     price = models.PositiveIntegerField(blank=False, null=False)
     description = models.TextField(default='')
-    dealer = models.ManyToManyField('Dealer', 'ads', on_delete=models.CASCADE)
     date = models.DateTimeField(blank=False, null=False)
 
 
 class ScooterAd(Ad):
-    product = models.ManyToManyField('Scooter', 'ads', on_delete=models.CASCADE)
+    dealer = models.ForeignKey('Dealer', models.CASCADE, 'scooters_ads')
+    product = models.ForeignKey('Scooter', models.CASCADE, 'scooters_ads')
 
     def __str__(self):
         return self.product.name + self.dealer
 
 
 class MotorcycleAd(Ad):
-    product = models.ManyToManyField('Motorcycle', 'ads', on_delete=models.CASCADE)
+    dealer = models.ForeignKey('Dealer', models.CASCADE, 'motorcycles_ads')
+    product = models.ForeignKey('Motorcycle', models.CASCADE, 'motorcycles_ads')
 
     def __str__(self):
         return self.product.name + self.dealer
 
 
 class CarAd(Ad):
-    product = models.ManyToManyField('Car', 'ads', on_delete=models.CASCADE)
+    dealer = models.ForeignKey('Dealer', models.CASCADE, 'cars_ads')
+    product = models.ForeignKey('Car', models.CASCADE, 'cars_ads')
 
     def __str__(self):
         return self.product.name + self.dealer
 
 
 class Dealer(models.Model):
-    name = models.CharField(blank=False, null=False, unique=True)
+    name = models.CharField(blank=False, null=False, unique=True, max_length=50)
     rating = models.SmallIntegerField(default=0)
-    website = models.CharField(blank=True, null=True)
+    website = models.CharField(blank=True, null=True, max_length=100)
     description = models.TextField(default='')
 
     def __str__(self):
