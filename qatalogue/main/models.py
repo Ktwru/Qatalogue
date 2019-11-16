@@ -7,6 +7,7 @@ class Scooter(models.Model):
     maxSpeed = models.PositiveSmallIntegerField(blank=False, null=False)
     power = models.PositiveSmallIntegerField(blank=False, null=False)
     batteryCapacity = models.PositiveIntegerField(blank=False, null=False)
+    pic = models.ImageField(null=True, blank=True, upload_to='products', default=None)
 
     def __str__(self):
         return self.producer.name + self.model
@@ -20,6 +21,7 @@ class Motorcycle(models.Model):
     cylinders = models.PositiveSmallIntegerField(blank=False, null=False)
     volume = models.PositiveSmallIntegerField(blank=False, null=False)
     power = models.PositiveSmallIntegerField(blank=False, null=False)
+    pic = models.ImageField(null=True, blank=True, upload_to='products', default=None)
 
     def __str__(self):
         return self.producer.name + self.model
@@ -35,6 +37,7 @@ class Car(models.Model):
     volume = models.PositiveSmallIntegerField(blank=False, null=False)
     power = models.PositiveSmallIntegerField(blank=False, null=False)
     drive = models.PositiveSmallIntegerField(blank=False, null=False, choices=CAR_DRIVE_CHOICES)
+    pic = models.ImageField(null=True, blank=True, upload_to='products', default=None)
 
     def __str__(self):
         return self.producer.name + self.model
