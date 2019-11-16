@@ -81,7 +81,7 @@ class CarAd(Ad):
     product = models.ForeignKey('Car', models.CASCADE, 'cars_ads')
 
     def __str__(self):
-        return self.product.name + self.dealer
+        return self.product.model + ' ' + self.product.producer.name + ' ' + self.dealer.name
 
 
 class Dealer(models.Model):
