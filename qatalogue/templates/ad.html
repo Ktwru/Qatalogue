@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>AD</title>
+</head>
+<body>
+    <h1>{{product.producer}} {{product.model}}</h1>
+        {%if category == 'cars'%}
+            {{product.year}}, {{product.get_type_display}}, {{product.volume}}, {{product.power}}, {{product.get_drive_display}}
+        {%elif category == 'motorcycles'%}
+            {{product.get_type_display}}, {{product.cylinders}}, {{product.volume}}, {{product.power}}
+        {%elif category == 'scooters'%}
+            {{product.max_speed}}, {{product.power}}, {{product.battery_capacity}}
+        {%endif%}
+    {%for ad in ads%}
+    <li>{{ad.dealer}}, {{ad.description}}, {{ad.price}}, {{ad.date}}</li>
+    {%endfor%}
+</body>
+</html>
