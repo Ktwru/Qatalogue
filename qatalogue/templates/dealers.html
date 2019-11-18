@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dealers</title>
+</head>
+<body>
+    <h1>Dealers:</h1>
+    {%for dealer in dealers%}
+    <li>{{dealer}}</li><a href="ads/dealers/{{dealer.0}}">{{dealer.0}} ads</a>
+    {%endfor%}
+</body>
+</html>

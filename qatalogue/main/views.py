@@ -45,3 +45,25 @@ def ad(request, category, id):
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ad.html", {"product": product, "ads": ads, "category": category})
+
+
+def dealers(request):
+    dealer = Dealer.objects.annotate(
+        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name', 'rating',
+                                                                                                    'website',
+                                                                                                    'description',
+                                                                                                    'ads').order_by(
+        '-rating')
+    return render(request, "dealers.html", {"dealers": dealer})
+
+
+def dealer(request, name):
+    product = CarAd.objects.select_related('cars_ads').prefetch_related('cars_ads__price').annotate(
+        ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(dealer=id).values_list('producer__name', 'model', 'ads',
+                                                                             'min', 'id', 'dealer')
+
+    cars = CarAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
+    motorcycles = MotorcycleAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
+    scooters = ScooterAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
+    category_name = name + 'ads'
+    return render(request, "ads.html", {"products": product, "category_name": category_name})
