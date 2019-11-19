@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponseBadRequest
 from main.models import *
-from django.db.models import Count, Min
+from django.db.models import Count, Min, Value, CharField
+from itertools import chain
 
 
 def main_paige(request):
@@ -11,21 +12,21 @@ def main_paige(request):
 def ads(request, category):
     if category == 'cars':
         product = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__price').annotate(
-            ads=Count('cars_ads'), min=Min('cars_ads__price')).all().values_list('producer__name', 'model', 'ads',
-                                                                                 'min', 'id')
+            ads=Count('cars_ads'), min=Min('cars_ads__price')).all().values_list('producer__name', 'model', 'id',
+                                                                                 'min', 'ads')
         category_name = 'Cars'
     elif category == 'motorcycles':
         product = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
             'motorcycles_ads__price').annotate(
             ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all().values_list('producer__name',
-                                                                                               'model', 'ads',
-                                                                                               'min', 'id')
+                                                                                               'model', 'id',
+                                                                                               'min', 'ads')
         category_name = 'Motorcycles'
     elif category == 'scooters':
         product = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__price').annotate(
             ads=Count('scooters_ads'), min=Min('scooters_ads__price')).all().values_list('producer__name', 'model',
-                                                                                         'ads',
-                                                                                         'min', 'id')
+                                                                                         'id',
+                                                                                         'min', 'ads')
         category_name = 'Scooters'
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
@@ -58,12 +59,9 @@ def dealers(request):
 
 
 def dealer(request, name):
-    product = CarAd.objects.select_related('cars_ads').prefetch_related('cars_ads__price').annotate(
-        ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(dealer=id).values_list('producer__name', 'model', 'ads',
-                                                                             'min', 'id', 'dealer')
-
-    cars = CarAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
-    motorcycles = MotorcycleAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
-    scooters = ScooterAd.objects.filter(dealer__name=name).value_list('producer__name', 'model', '', '', 'id')
-    category_name = name + 'ads'
+    cars = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__dealer').annotate(category=Value('cars', output_field=CharField())).filter(cars_ads__dealer__name=name).values_list('producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category')
+    motorcycles = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related('motorcycles_ads__dealer').annotate(category=Value('motorcycles', output_field=CharField())).filter(motorcycles_ads__dealer__name=name).values_list('producer__name', 'model', 'id', 'motorcycles_ads__price', 'motorcycles_ads__date', 'category')
+    scooters = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__dealer').annotate(category=Value('scooters', output_field=CharField())).filter(scooters_ads__dealer__name=name).values_list('producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category')
+    product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
+    category_name = name + ' ads'
     return render(request, "ads.html", {"products": product, "category_name": category_name})

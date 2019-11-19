@@ -19,7 +19,7 @@ from main import views
 
 
 urlpatterns = [
-    re_path(r'^ads/dealers/(?P<name>\d+)', views.dealer),
+    re_path(r'^ads/dealers/(?P<name>\w+)', views.dealer),
     re_path(r'^ads/(?P<category>\w+)/(?P<id>\d+)', views.ad),
     re_path(r'^ads/(?P<category>\w+)', views.ads),
     re_path(r'^dealers', views.dealers),
