@@ -50,7 +50,7 @@ def ad(request, category, id):
 
 def dealers(request):
     dealer = Dealer.objects.annotate(
-        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name', 'rating',
+        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name__username', 'rating',
                                                                                                     'website',
                                                                                                     'description',
                                                                                                     'ads').order_by(
@@ -60,14 +60,14 @@ def dealers(request):
 
 def dealer(request, name):
     cars = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__dealer').annotate(
-        category=Value('cars', output_field=CharField())).filter(cars_ads__dealer__name=name).values_list(
+        category=Value('cars', output_field=CharField())).filter(cars_ads__dealer__name__username=name).values_list(
         'producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category')
     motorcycles = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
         'motorcycles_ads__dealer').annotate(category=Value('motorcycles', output_field=CharField())).filter(
-        motorcycles_ads__dealer__name=name).values_list('producer__name', 'model', 'id', 'motorcycles_ads__price',
+        motorcycles_ads__dealer__name__username=name).values_list('producer__name', 'model', 'id', 'motorcycles_ads__price',
                                                         'motorcycles_ads__date', 'category')
     scooters = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__dealer').annotate(
-        category=Value('scooters', output_field=CharField())).filter(scooters_ads__dealer__name=name).values_list(
+        category=Value('scooters', output_field=CharField())).filter(scooters_ads__dealer__name__username=name).values_list(
         'producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category')
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'

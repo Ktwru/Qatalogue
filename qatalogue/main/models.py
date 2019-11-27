@@ -93,6 +93,9 @@ class Dealer(models.Model):
     valid = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        val = " [unvalidated]"
+        if self.valid:
+            val = ""
+        return self.name.username + val
 
 
