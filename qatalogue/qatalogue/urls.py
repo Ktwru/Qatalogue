@@ -19,6 +19,8 @@ from main import views
 
 
 urlpatterns = [
+    path('dealer_registration/', views.dealer_registration),
+    path('registration/', views.registration),
     path('accounts/', include('django.contrib.auth.urls')),
     re_path(r'^ads/dealers/(?P<name>\w+)', views.dealer),
     re_path(r'^ads/(?P<category>\w+)/(?P<id>\d+)', views.ad),

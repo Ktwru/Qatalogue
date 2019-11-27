@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponsePermanentRedirect
 from main.models import *
 from django.db.models import Count, Min, Value, CharField
 from itertools import chain
+from .forms import RegistrationUser, RegistrationDealer
+from django.contrib.auth import authenticate, login
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def main_paige(request):
@@ -72,3 +75,47 @@ def dealer(request, name):
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'
     return render(request, "ads.html", {"products": product, "category_name": category_name})
+
+
+def registration(request):
+    if request.user.is_authenticated:
+        return HttpResponseBadRequest("<h1>You are already registered</h1>")
+    form = RegistrationUser
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+        email = request.POST.get("email")
+        is_dealer = request.POST.get("dealer")
+        if User.objects.filter(username=username).exists():
+            return render(request, "registration/registration.html", {"form": form, "error": "User " + username + " already exists!"})
+        if password1 != password2:
+            return render(request, "registration/registration.html", {"form": form, "error": "Passwords do not match!"})
+        new_user = User(username=username, email=email)
+        new_user.set_password(password1)
+        new_user.save()
+        user = authenticate(username=username, password=password1)
+        login(request, user)
+        if is_dealer:
+            return HttpResponsePermanentRedirect("/dealer_registration/")
+        return HttpResponsePermanentRedirect("/")
+    else:
+        return render(request, "registration/registration.html", {"form": form})
+
+
+def dealer_registration(request):
+    if not request.user.is_authenticated:
+        return HttpResponseBadRequest("<h1>Bad request</h1>")
+    if request.method == 'POST':
+        website = request.POST.get("website")
+        description = request.POST.get("description")
+        Dealer.objects.update_or_create(name=User.objects.get(id=request.user.id), defaults={"website": website, "description": description})
+        return HttpResponsePermanentRedirect('/dealers/' + request.user.username)
+    else:
+        try:
+            initial = Dealer.objects.get(name__id=request.user.id)
+            initial_dict = {"website": initial.website, "description": initial.description}
+        except ObjectDoesNotExist:
+            initial_dict = None
+        form = RegistrationDealer(initial=initial_dict)
+        return render(request, "registration/edit.html", {"form": form})
