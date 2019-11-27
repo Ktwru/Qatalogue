@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Scooter(models.Model):
@@ -85,10 +86,11 @@ class CarAd(Ad):
 
 
 class Dealer(models.Model):
-    name = models.CharField(blank=False, null=False, unique=True, max_length=50)
+    name = models.OneToOneField(User, models.CASCADE)
     rating = models.SmallIntegerField(default=0)
     website = models.CharField(blank=True, null=True, max_length=100)
     description = models.TextField(default='')
+    valid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
