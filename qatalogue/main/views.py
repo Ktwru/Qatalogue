@@ -6,6 +6,7 @@ from itertools import chain
 from .forms import RegistrationUser, RegistrationDealer, SetCars
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
+from .filters import CarFilter
 
 
 def main_paige(request):
@@ -14,12 +15,11 @@ def main_paige(request):
 
 def ads(request, category):
     if category == 'cars':
-        product = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__price').annotate(
-            ads=Count('cars_ads'), min=Min('cars_ads__price')).all().values_list('producer__name', 'model', 'id',
-                                                                                 'min', 'ads')
+        product = Car.objects.select_related().prefetch_related().annotate(
+            ads=Count('cars_ads'), min=Min('cars_ads__price')).all()
         category_name = 'Cars'
-        filter_form = SetCars
-    elif category == 'motorcycles':
+        product_filter = CarFilter(request.GET, queryset=product)
+    elif category == 'motorcycles':                 # ------------------------------------------
         product = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
             'motorcycles_ads__price').annotate(
             ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all().values_list('producer__name',
@@ -35,7 +35,7 @@ def ads(request, category):
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ads.html", {"products": product, "category_name": category_name,
-                                        "category": category, "filter_form": filter_form})
+                                        "category": category, "filter": product_filter})
 
 
 def ad(request, category, id):

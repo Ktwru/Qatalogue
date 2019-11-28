@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,4 @@ MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/'
 
+FILTERS_DISABLE_HELP_TEXT = False

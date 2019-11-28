@@ -66,7 +66,7 @@ class ScooterAd(Ad):
     product = models.ForeignKey('Scooter', models.CASCADE, 'scooters_ads')
 
     def __str__(self):
-        return self.product.name + self.dealer
+        return self.product.name + self.dealer.name.username
 
 
 class MotorcycleAd(Ad):
@@ -74,7 +74,7 @@ class MotorcycleAd(Ad):
     product = models.ForeignKey('Motorcycle', models.CASCADE, 'motorcycles_ads')
 
     def __str__(self):
-        return self.product.name + self.dealer
+        return self.product.name + self.dealer.name.username
 
 
 class CarAd(Ad):
@@ -82,7 +82,7 @@ class CarAd(Ad):
     product = models.ForeignKey('Car', models.CASCADE, 'cars_ads')
 
     def __str__(self):
-        return self.product.model + ' ' + self.product.producer.name + ' ' + self.dealer.name
+        return self.product.model + ' ' + self.product.producer.name + ' ' + self.dealer.name.username
 
 
 class Dealer(models.Model):

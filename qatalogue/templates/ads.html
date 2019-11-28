@@ -17,5 +17,16 @@
     </table>
     <input type="submit" value="confirm" class="confirm">
     </form>
+---------------------------------------------------------
+    <table width="20%"><form action="" method="get">
+        {{ filter.form.as_table }}
+        <input type="submit" />
+    </form></table>
+    {% for obj in filter.qs %}
+        <li><a href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
+        .year-{{obj.year}}.{{obj.get_type_display}}.volume-
+        {{obj.volume}}.power-{{obj.power}}.{{obj.get_drive_display}}.ads-count-{{obj.ads}}.min-price-{{obj.min}}
+        </li>
+    {% endfor %}
 </body>
 </html>
