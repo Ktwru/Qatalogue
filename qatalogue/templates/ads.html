@@ -10,12 +10,14 @@
     <li>{{product}}<a href="/ads/{{product.5}}{{category}}/{{product.2}}">IN</a>{{product.2}}///{{product.5}}</li>
     {%endfor%}
 
-    <form method = "POST" enctype="multipart/form-data" class="NewThread">
-    {% csrf_token %}
-    <table>
-    {{filter_form}}
-    </table>
-    <input type="submit" value="confirm" class="confirm">
+    {% block content %}
+    <form action="" method="get">
+        {{ filter_form.form}}
+        <input type="submit" />
     </form>
+    {% for obj in filter_form.qs %}
+        {{ obj.model }}  - ${{ obj.year }} {{obj.ads}}<br />
+    {% endfor %}
+{% endblock %}
 </body>
 </html>
