@@ -6,7 +6,6 @@ from itertools import chain
 from .forms import RegistrationUser, RegistrationDealer, SetCars
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
-from .filters import ProductFilter
 
 
 def main_paige(request):
@@ -15,12 +14,11 @@ def main_paige(request):
 
 def ads(request, category):
     if category == 'cars':
-        product = Car.objects.select_related().prefetch_related('cars_ads__price').annotate(
-            ads=Count('cars_ads'), min=Min('cars_ads__price')).all()
+        product = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__price').annotate(
+            ads=Count('cars_ads'), min=Min('cars_ads__price')).all().values_list('producer__name', 'model', 'id',
+                                                                                 'min', 'ads')
         category_name = 'Cars'
         filter_form = SetCars
-
-        f = ProductFilter(request.GET, product)
     elif category == 'motorcycles':
         product = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
             'motorcycles_ads__price').annotate(
@@ -37,7 +35,7 @@ def ads(request, category):
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ads.html", {"products": product, "category_name": category_name,
-                                        "category": category, "filter_form": f})
+                                        "category": category, "filter_form": filter_form})
 
 
 def ad(request, category, id):
