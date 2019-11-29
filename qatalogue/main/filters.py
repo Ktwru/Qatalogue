@@ -17,6 +17,8 @@ class CarFilter(django_filters.FilterSet):
                                                 widget=CheckboxSelectMultiple)
     cars_ads__price = django_filters.RangeFilter(lookup_expr='exact', help_text=str(
         initial_values['price_min']) + ' - ' + str(initial_values['price_max']))
+    volume = django_filters.NumberFilter(field_name='volume', lookup_expr='gt')
+    power = django_filters.NumberFilter(field_name='power', lookup_expr='gt')
 
     class Meta:
         model = Car
@@ -32,6 +34,8 @@ class MotorcycleFilter(django_filters.FilterSet):
     )
     cylinders = django_filters.MultipleChoiceFilter(choices=((1, 1), (2, 2), (4, 4)), label="Number of cylinders",
                                                     widget=CheckboxSelectMultiple)
+    volume = django_filters.NumberFilter(field_name='volume', lookup_expr='gt')
+    power = django_filters.NumberFilter(field_name='power', lookup_expr='gt')
 
     class Meta:
         model = Motorcycle
@@ -45,6 +49,10 @@ class ScooterFilter(django_filters.FilterSet):
     scooters_ads__price = django_filters.RangeFilter(lookup_expr='exacts', help_text=str(
         initial_values['price_min']) + ' - ' + str(initial_values['price_max'])
     )
+    max_speed = django_filters.NumberFilter(field_name='max_speed', lookup_expr='gt', label='Maximal speed')
+    battery_capacity = django_filters.NumberFilter(field_name='battery_capacity', lookup_expr='gt',
+                                                   label='Battery capacity')
+    power = django_filters.NumberFilter(field_name='power', lookup_expr='gt')
 
     class Meta:
         model = Scooter
