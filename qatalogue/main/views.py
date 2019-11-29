@@ -6,7 +6,7 @@ from itertools import chain
 from .forms import RegistrationUser, RegistrationDealer, SetCars
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
-from .filters import CarFilter
+from .filters import CarFilter, MotorcycleFilter, ScooterFilter
 
 
 def main_paige(request):
@@ -20,18 +20,16 @@ def ads(request, category):
         category_name = 'Cars'
         product_filter = CarFilter(request.GET, queryset=product)
     elif category == 'motorcycles':                 # ------------------------------------------
-        product = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
-            'motorcycles_ads__price').annotate(
-            ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all().values_list('producer__name',
-                                                                                               'model', 'id',
-                                                                                               'min', 'ads')
+        product = Motorcycle.objects.select_related().prefetch_related(
+            ).annotate(
+            ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all()
         category_name = 'Motorcycles'
+        product_filter = MotorcycleFilter(request.GET, queryset=product)
     elif category == 'scooters':
-        product = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__price').annotate(
-            ads=Count('scooters_ads'), min=Min('scooters_ads__price')).all().values_list('producer__name', 'model',
-                                                                                         'id',
-                                                                                         'min', 'ads')
+        product = Scooter.objects.select_related().prefetch_related().annotate(
+            ads=Count('scooters_ads'), min=Min('scooters_ads__price')).all()
         category_name = 'Scooters'
+        product_filter = ScooterFilter(request.GET, queryset=product)
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ads.html", {"products": product, "category_name": category_name,
