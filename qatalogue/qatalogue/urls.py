@@ -23,6 +23,7 @@ urlpatterns = [
     path('registration/', views.registration),
     path('accounts/', include('django.contrib.auth.urls')),
     re_path(r'^ads/dealers/(?P<name>\w+)', views.dealer),
+    re_path(r'^ads/search', views.search, name='search'),
     re_path(r'^ads/(?P<category>\w+)/(?P<id>\d+)', views.ad),
     re_path(r'^ads/(?P<category>\w+)', views.ads),
     re_path(r'^dealers', views.dealers),

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseBadRequest, HttpResponsePermanentRedirect
 from main.models import *
-from django.db.models import Count, Min, Value, CharField
+from django.db.models import Count, Min, Value, CharField, Q
 from itertools import chain
 from .forms import RegistrationUser, RegistrationDealer, SetCars
 from django.contrib.auth import authenticate, login
@@ -19,9 +19,9 @@ def ads(request, category):
             ads=Count('cars_ads'), min=Min('cars_ads__price')).all()
         category_name = 'Cars'
         product_filter = CarFilter(request.GET, queryset=product)
-    elif category == 'motorcycles':                 # ------------------------------------------
+    elif category == 'motorcycles':  # ------------------------------------------
         product = Motorcycle.objects.select_related().prefetch_related(
-            ).annotate(
+        ).annotate(
             ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all()
         category_name = 'Motorcycles'
         product_filter = MotorcycleFilter(request.GET, queryset=product)
@@ -53,7 +53,8 @@ def ad(request, category, id):
 
 def dealers(request):
     dealer = Dealer.objects.annotate(
-        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name__username', 'rating',
+        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name__username',
+                                                                                                    'rating',
                                                                                                     'website',
                                                                                                     'description',
                                                                                                     'ads').order_by(
@@ -67,10 +68,12 @@ def dealer(request, name):
         'producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category')
     motorcycles = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
         'motorcycles_ads__dealer').annotate(category=Value('motorcycles', output_field=CharField())).filter(
-        motorcycles_ads__dealer__name__username=name).values_list('producer__name', 'model', 'id', 'motorcycles_ads__price',
-                                                        'motorcycles_ads__date', 'category')
+        motorcycles_ads__dealer__name__username=name).values_list('producer__name', 'model', 'id',
+                                                                  'motorcycles_ads__price',
+                                                                  'motorcycles_ads__date', 'category')
     scooters = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__dealer').annotate(
-        category=Value('scooters', output_field=CharField())).filter(scooters_ads__dealer__name__username=name).values_list(
+        category=Value('scooters', output_field=CharField())).filter(
+        scooters_ads__dealer__name__username=name).values_list(
         'producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category')
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'
@@ -88,7 +91,8 @@ def registration(request):
         email = request.POST.get("email")
         is_dealer = request.POST.get("dealer")
         if User.objects.filter(username=username).exists():
-            return render(request, "registration/registration.html", {"form": form, "error": "User " + username + " already exists!"})
+            return render(request, "registration/registration.html",
+                          {"form": form, "error": "User " + username + " already exists!"})
         if password1 != password2:
             return render(request, "registration/registration.html", {"form": form, "error": "Passwords do not match!"})
         new_user = User(username=username, email=email)
@@ -109,7 +113,8 @@ def dealer_registration(request):
     if request.method == 'POST':
         website = request.POST.get("website")
         description = request.POST.get("description")
-        Dealer.objects.update_or_create(name=User.objects.get(id=request.user.id), defaults={"website": website, "description": description})
+        Dealer.objects.update_or_create(name=User.objects.get(id=request.user.id),
+                                        defaults={"website": website, "description": description})
         return HttpResponsePermanentRedirect('/dealers/' + request.user.username)
     else:
         try:
@@ -119,3 +124,25 @@ def dealer_registration(request):
             initial_dict = None
         form = RegistrationDealer(initial=initial_dict)
         return render(request, "registration/edit.html", {"form": form})
+
+
+def search(request):
+    mark = request.GET.get('mark')
+    cars = Car.objects.select_related('cars_ads', 'producer').prefetch_related('producer__name').annotate(
+        category=Value('cars', output_field=CharField()),
+        ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(
+        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+        'producer__name', 'model', 'category', 'id', 'ads', 'min')
+    motorcycles = Motorcycle.objects.select_related('motorcycles_ads', 'producer').prefetch_related('producer__name').annotate(
+        category=Value('motorcycles', output_field=CharField()),
+        ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).filter(
+        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+        'producer__name', 'model', 'category', 'id', 'ads', 'min')
+    scooters = Scooter.objects.select_related('scooters_ads', 'producer').prefetch_related('producer__name').annotate(
+        category=Value('scooters', output_field=CharField()),
+        ads=Count('scooters_ads'), min=Min('scooters_ads__price')).filter(
+        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+        'producer__name', 'model', 'category', 'id', 'ads', 'min')
+
+    product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[3])
+    return render(request, "search.html", {"products": product})

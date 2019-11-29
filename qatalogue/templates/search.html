@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Search</title>
+</head>
+<body>
+
+
+---------------------------------------------------------
+
+
+
+    {% for product in products %}
+    <li> <a href="/ads/{{product.2}}/{{product.3}}">{{product.0}} {{product.1}}, {{product.4}} ads, price: {{product.5}}</a> </li>
+    {% endfor %}
+
+</body>
+</html>

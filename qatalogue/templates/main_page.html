@@ -19,5 +19,10 @@
         <a href="{% url 'login'%}?next={{request.path}}">Login</a> or
         <a href="/registration">Register</a>
     {% endif %}
+    <form action="{% url 'search' %}" method="get">
+
+    <input name="mark" type="text" placeholder="Search...">
+        <input type="submit" value="search" class="confirm">
+    </form>
 </body>
 </html>
