@@ -3,11 +3,11 @@ from django.http import HttpResponseBadRequest, HttpResponsePermanentRedirect
 from main.models import *
 from django.db.models import Count, Min, Value, CharField, Q
 from itertools import chain
-from .forms import RegistrationUser, RegistrationDealer, CreateAddCar
+from .forms import RegistrationUser, RegistrationDealer
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 from .filters import CarFilter, MotorcycleFilter, ScooterFilter
-from django.forms.models import modelform_factory
+from django.forms.models import modelform_factory, modelformset_factory, formset_factory
 
 
 def main_paige(request):
@@ -134,7 +134,8 @@ def search(request):
         ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(
         Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
         'producer__name', 'model', 'category', 'id', 'ads', 'min')
-    motorcycles = Motorcycle.objects.select_related('motorcycles_ads', 'producer').prefetch_related('producer__name').annotate(
+    motorcycles = Motorcycle.objects.select_related('motorcycles_ads', 'producer').prefetch_related(
+        'producer__name').annotate(
         category=Value('motorcycles', output_field=CharField()),
         ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).filter(
         Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
@@ -150,12 +151,17 @@ def search(request):
 
 
 def add_ad(request, category):
+    if not Dealer.objects.filter(name=request.user.id, valid=True).exists():
+        return HttpResponseBadRequest("<h1>You are not an validated dealer!</h1>")
     if category == 'cars':
-        form = modelform_factory(CarAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+        form = modelform_factory(CarAd, fields=('product', 'description', 'price'),
+                                 help_texts={'product': '<a href="/ads/cars/add_product">Add</a>'})
     elif category == 'motorcycles':
-        form = modelform_factory(MotorcycleAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+        form = modelform_factory(MotorcycleAd, fields=('product', 'description', 'price'),
+                                 help_texts={'product': '<a href="/ads/motorcycles/add_product">Add</a>'})
     elif category == 'scooters':
-        form = modelform_factory(ScooterAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+        form = modelform_factory(ScooterAd, fields=('product', 'description', 'price'),
+                                 help_texts={'product': '<a href="/ads/scooters/add_product">Add</a>'})
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     if request.method == 'POST':
@@ -164,4 +170,17 @@ def add_ad(request, category):
         new_ad.save()
         return HttpResponsePermanentRedirect('/ads/' + category)
     else:
+        if request.GET.get('id'):
+            form = form(initial={'product': request.GET.get('id')})
         return render(request, "new_ad.html", {"form": form})
+
+
+def add_product(request, category):
+    if not Dealer.objects.filter(name=request.user.id, valid=True).exists():
+        return HttpResponseBadRequest("<h1>You are not an validated dealer!</h1>")
+    if category == 'cars':
+        form = modelform_factory(Car, fields=('producer', 'model', 'price'),
+                                 help_texts={'product': '<a href="/ads/cars/add_product">Add</a>'})
+    elif category == 'motorcycles':
+
+    elif category == 'scooters':

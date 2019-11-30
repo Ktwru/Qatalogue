@@ -23,7 +23,9 @@
         <input type="submit" />
     </form></table>
     {% for obj in filter.qs %}
-        <li><a href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
+        <li>    <img src="{{ obj.pic.url }}" height="100"/>
+
+            <a href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
         .year-{{obj.year}}.{{obj.get_type_display}}.volume-
         {{obj.volume}}.power-{{obj.power}}.
             {{obj.get_drive_display}}{{obj.get_cylinders_display}}{% if obj.cylinders %}-cylinders {% endif %}
