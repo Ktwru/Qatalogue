@@ -3,10 +3,11 @@ from django.http import HttpResponseBadRequest, HttpResponsePermanentRedirect
 from main.models import *
 from django.db.models import Count, Min, Value, CharField, Q
 from itertools import chain
-from .forms import RegistrationUser, RegistrationDealer, SetCars
+from .forms import RegistrationUser, RegistrationDealer, CreateAddCar
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 from .filters import CarFilter, MotorcycleFilter, ScooterFilter
+from django.forms.models import modelform_factory
 
 
 def main_paige(request):
@@ -146,3 +147,21 @@ def search(request):
 
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[3])
     return render(request, "search.html", {"products": product})
+
+
+def add_ad(request, category):
+    if category == 'cars':
+        form = modelform_factory(CarAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+    elif category == 'motorcycles':
+        form = modelform_factory(MotorcycleAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+    elif category == 'scooters':
+        form = modelform_factory(ScooterAd, fields=('product', 'description', 'price'), help_texts = {'product': '<a href="">Add</a>'})
+    else:
+        return HttpResponseBadRequest("<h1>Bad Request</h1>")
+    if request.method == 'POST':
+        new_ad = form(request.POST).save(commit=False)
+        new_ad.dealer = Dealer.objects.get(name=request.user.id)
+        new_ad.save()
+        return HttpResponsePermanentRedirect('/ads/' + category)
+    else:
+        return render(request, "new_ad.html", {"form": form})

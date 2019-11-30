@@ -58,7 +58,7 @@ class Ad(models.Model):
         abstract = True
     price = models.PositiveIntegerField(blank=False, null=False)
     description = models.TextField(default='')
-    date = models.DateTimeField(blank=False, null=False)
+    date = models.DateTimeField(auto_now=True)
 
 
 class ScooterAd(Ad):
