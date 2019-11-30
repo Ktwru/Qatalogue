@@ -154,16 +154,15 @@ def add_ad(request, category):
     if not Dealer.objects.filter(name=request.user.id, valid=True).exists():
         return HttpResponseBadRequest("<h1>You are not an validated dealer!</h1>")
     if category == 'cars':
-        form = modelform_factory(CarAd, fields=('product', 'description', 'price'),
-                                 help_texts={'product': '<a href="/ads/cars/add_product">Add</a>'})
+        model = CarAd
     elif category == 'motorcycles':
-        form = modelform_factory(MotorcycleAd, fields=('product', 'description', 'price'),
-                                 help_texts={'product': '<a href="/ads/motorcycles/add_product">Add</a>'})
+        model = MotorcycleAd
     elif category == 'scooters':
-        form = modelform_factory(ScooterAd, fields=('product', 'description', 'price'),
-                                 help_texts={'product': '<a href="/ads/scooters/add_product">Add</a>'})
+        model = ScooterAd
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
+    form = modelform_factory(model, fields=('product', 'description', 'price'),
+                             help_texts={'product': '<a href=\"/ads/' + category + "/add_product\">Add</a>"})
     if request.method == 'POST':
         new_ad = form(request.POST).save(commit=False)
         new_ad.dealer = Dealer.objects.get(name=request.user.id)
@@ -179,8 +178,22 @@ def add_product(request, category):
     if not Dealer.objects.filter(name=request.user.id, valid=True).exists():
         return HttpResponseBadRequest("<h1>You are not an validated dealer!</h1>")
     if category == 'cars':
-        form = modelform_factory(Car, fields=('producer', 'model', 'price'),
-                                 help_texts={'product': '<a href="/ads/cars/add_product">Add</a>'})
+        model = Car
+        form_fields = ('producer', 'model', 'type', 'year', 'volume', 'power', 'drive', 'pic')
+        form_labels = {'drive': "Drive unit"}
     elif category == 'motorcycles':
-
+        model = Motorcycle
+        form_fields = ('producer', 'model', 'type', 'cylinders', 'volume', 'power', 'pic')
+        form_labels = {'cylinders': "Number of cylinders"}
     elif category == 'scooters':
+        model = Scooter
+        form_fields = ('producer', 'model', 'max_speed', 'battery_capacity', 'power', 'pic')
+        form_labels = {'max_speed': "Max speed", 'battery_capacity': "Battery capacity"}
+    else:
+        return HttpResponseBadRequest("<h1>Bad Request</h1>")
+    form = modelform_factory(model, fields=form_fields, labels=form_labels)
+    if request.method == 'POST':
+        form(request.POST, request.FILES).save()
+        return HttpResponsePermanentRedirect('/ads/' + category)
+    else:
+        return render(request, "new_ad.html", {"form": form})

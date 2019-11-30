@@ -26,6 +26,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('accounts/', include('django.contrib.auth.urls')),
     re_path(r'^ads/dealers/(?P<name>\w+)', views.dealer),
     re_path(r'^ads/search', views.search, name='search'),
+    re_path(r'^ads/(?P<category>\w+)/add_product', views.add_product),
     re_path(r'^ads/(?P<category>\w+)/add', views.add_ad),
     re_path(r'^ads/(?P<category>\w+)/(?P<id>\d+)', views.ad),
     re_path(r'^ads/(?P<category>\w+)', views.ads),
