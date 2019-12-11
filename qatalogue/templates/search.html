@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8"/>
-    <title>Search</title>
-</head>
-<body>
-
-
----------------------------------------------------------
-
-
-
+{% extends "base.html" %}
+{% block title %}Search results{% endblock title %}
+{% block content %}
     {% for product in products %}
-    <li> <a href="/ads/{{product.2}}/{{product.3}}">{{product.0}} {{product.1}}, {{product.4}} ads, price: {{product.5}}</a> </li>
+            <li>    <img src="/media/{{ product.6 }}" height="100"/>
+     <a href="/ads/{{product.2}}/{{product.3}}">{{product.0}} {{product.1}}, {{product.4}} ads, min price: {{product.5}}</a> </li>
     {% endfor %}
-
-</body>
-</html>
+{% endblock content %}

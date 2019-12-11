@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{category_name}}{% endblock title %}
+{% block header_name %}{{category_name}}{% endblock header_name %}
+
+{% block content%}
+    <a href="/ads/cars/add">ADD car</a>
+    <a href="/ads/motorcycles/add">ADD motorcycle</a>
+    <a href="/ads/scooters/add">ADD scooter</a>
+    {% for product in products %}
+        <li>    <img src="/media/{{ product.6 }}" height="100"/>
+
+            <a href="/ads/{{product.5}}/{{product.2}}">{{ product.0 }} {{ product.1 }}</a>
+         price: {{product.3}}, {{product.4}}
+        </li>
+    {% endfor %}
+{% endblock content %}

@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8"/>
-    <title>AD</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{product.producer}} {{product.model}}{% endblock title%}
+{% block header_name %}{{product.producer}} {{product.model}}{% endblock header_name %}
+{% block content %}
     <h1> {{product.producer}} {{product.model}}</h1>
     <img src="{{ product.pic.url }}" height="400"/>
         {%if category == 'cars'%}
@@ -18,5 +15,4 @@
     <li>{{ad.dealer}}, {{ad.description}}, {{ad.price}}, {{ad.date}}</li>
     {%endfor%}
         <a href="/ads/{{category}}/add?id={{product.id}}">ADD</a>
-</body>
-</html>
+{% endblock content%}
