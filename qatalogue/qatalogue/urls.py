@@ -24,6 +24,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path('dealer_registration/', views.dealer_registration),
     path('registration/', views.registration),
     path('accounts/', include('django.contrib.auth.urls')),
+    re_path(r'^producers/(?P<id>\d+)', views.producer),
     re_path(r'^ads/dealers/(?P<name>\w+)', views.dealer),
     re_path(r'^ads/search', views.search, name='search'),
     re_path(r'^ads/(?P<category>\w+)/add_product', views.add_product),

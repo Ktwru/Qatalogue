@@ -7,11 +7,13 @@ from .forms import RegistrationUser, RegistrationDealer
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 from .filters import CarFilter, MotorcycleFilter, ScooterFilter
-from django.forms.models import modelform_factory, modelformset_factory, formset_factory
+from django.forms.models import modelform_factory
+import requests
 
 
 def main_paige(request):
-    return render(request, "main_page.html")
+    cash_course = requests.get('https://belarusbank.by/api/kursExchange', params={'city': 'Минск'}).json()[0]
+    return render(request, "main_page.html", {'cash_course': cash_course})
 
 
 def ads(request, category):
@@ -197,3 +199,7 @@ def add_product(request, category):
         return HttpResponsePermanentRedirect('/ads/' + category)
     else:
         return render(request, "new_ad.html", {"form": form})
+
+
+def producer(request, id):
+    return render(request, "producer.html", {"producer": Producer.objects.get(id=id)})

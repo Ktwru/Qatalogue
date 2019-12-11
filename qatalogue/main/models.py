@@ -30,7 +30,7 @@ class Motorcycle(models.Model):
 
 class Car(models.Model):
     CAR_TYPE_CHOICES = ((1, 'sedan'), (2, 'hatchback'), (3, 'SUV'), (4, 'station wagon'), (5, 'coupe'), (6, 'minivan'))
-    CAR_DRIVE_CHOICES = ((1, 'rear'), ( 2, 'foward'), (3, 'full'))
+    CAR_DRIVE_CHOICES = ((1, 'rear'), (2, 'foward'), (3, 'full'))
     model = models.CharField(blank=False, null=False, unique=True, max_length=50)
     producer = models.ForeignKey('Producer', models.CASCADE, 'cars')
     year = models.PositiveSmallIntegerField(blank=False, null=False)
