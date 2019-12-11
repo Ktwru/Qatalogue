@@ -11,9 +11,12 @@ from django.forms.models import modelform_factory
 import requests
 
 
+def exchange():
+    return requests.get('https://belarusbank.by/api/kursExchange', params={'city': 'Минск'}).json()[0]
+
+
 def main_paige(request):
-    cash_course = requests.get('https://belarusbank.by/api/kursExchange', params={'city': 'Минск'}).json()[0]
-    return render(request, "main_page.html", {'cash_course': cash_course})
+    return render(request, "main_page.html", {'cash_course': exchange()})
 
 
 def ads(request, category):
