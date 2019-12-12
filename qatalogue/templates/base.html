@@ -46,11 +46,17 @@
         <input type="submit" value="search" class="search_button">
     </form>
                 </div>
-                <div class="content">
+                <div class="option">
     {% block option %}
     {% endblock option %}
+                </div>
+                <div class="content">
     {% block content %}
     {% endblock content %}
+                </div>
+                <div class="miniheader">
+                <a class="miniheader_name" href="/">Qatalogue</a>
+                    <h2 class="miniheader_subname">{{category_name}}</h2>
                 </div>
 </body>
 </html>
