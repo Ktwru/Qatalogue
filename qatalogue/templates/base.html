@@ -1,43 +1,56 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html>
 <head>
     <meta charset="UTF-8"/>
     <title>{% block title %}Qatalogue{% endblock title %}</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-    <h1>
+                <a class="header_name" href="/">Qatalogue:</a>
+                <h2 class="header_subname">
     {% block header_name %}
     Welcome :8
     {% endblock header_name %}
-    </h1>
+                </h2>
+                <div class="header">
     {% block header %}
-    <a href="/ads/cars">Cars</a>
-    <a href="/ads/motorcycles">Motorcycles</a>
-    <a href="/ads/scooters">Scooters</a>
-    <a href="/dealers">Dealers</a>
-    1 USD = {{cash_course.USD_in}} BYN
-    1 USD = {{cash_course.EUR_in}} BYN
-
+                    <table class="header_map"><tr>
+                        <th class="h_m_th"><a class="h_m_a" href="/ads/cars">Cars</a></th>
+                        <th class="h_m_th"><a class="h_m_a" href="/ads/motorcycles">Motorcycles</a></th>
+                        <th class="h_m_th"><a class="h_m_a" href="/ads/scooters">Scooters</a></th>
+                        <th class="h_m_th"><a class="h_m_a" href="/dealers">Dealers</a></th>
+                        <th class="h_m_th"><a class="h_m_a" href="/producers">Producers</a></th>
+                        <th class="h_m_th"><a class="h_m_a" href="/about">About</a></th>
+                    </tr></table>
+                    <table class="exchange">
+                        <tr><th>1 USD = {{cash_course.USD_in}} BYN</th></tr>
+                        <tr><th>1 EUR = {{cash_course.EUR_in}} BYN</th></tr>
+                    </table>
+                    <table class="auth"><tr>
     {% if user.is_authenticated %}
-        {{user.get_username}}
-        <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+                        <th>{{user.get_username}}:</th>
+                        <th><a href="{% url 'logout'%}?next={{request.path}}" class="auth_a">Logout</a></th>
     {% else %}
-        <a href="{% url 'login'%}?next={{request.path}}">Login</a> or
-        <a href="/registration">Register</a>
+                        <th><a href="{% url 'login'%}?next={{request.path}}" class="auth_a">Login</a></th>
+                        <th><a href="/registration" class="auth_a">Register</a></th>
     {% endif %}
     {% endblock header %}
-
-
+                    </tr></table>
+                </div>
+                <div class="search">
     <form action="{% url 'search' %}" method="get">
 
-    <input name="mark" type="text" placeholder="Search...">
-        <input type="submit" value="search" class="confirm">
+    <input name="mark" type="text" placeholder="Search..." class="search_form">
+        <input type="submit" value="search" class="search_button">
     </form>
-
-
+                </div>
+                <div class="content">
     {% block option %}
     {% endblock option %}
     {% block content %}
     {% endblock content %}
+                </div>
 </body>
 </html>

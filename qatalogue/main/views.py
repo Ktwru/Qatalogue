@@ -39,7 +39,7 @@ def ads(request, category):
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ads.html", {"products": product, "category_name": category_name,
-                                        "category": category, "filter": product_filter})
+                                        "category": category, "filter": product_filter, 'cash_course': exchange()})
 
 
 def ad(request, category, id):
@@ -54,7 +54,7 @@ def ad(request, category, id):
         ads = ScooterAd.objects.filter(product=product)
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
-    return render(request, "ad.html", {"product": product, "ads": ads, "category": category})
+    return render(request, "ad.html", {"product": product, "ads": ads, "category": category, 'cash_course': exchange()})
 
 
 def dealers(request):
@@ -66,7 +66,7 @@ def dealers(request):
                                                                                                     'description',
                                                                                                     'ads').order_by(
         '-rating')
-    return render(request, "dealers.html", {"dealers": dealers})
+    return render(request, "dealers.html", {"dealers": dealers, 'cash_course': exchange()})
 
 
 def dealer(request, name):
@@ -84,7 +84,7 @@ def dealer(request, name):
         'producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category', 'pic')
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'
-    return render(request, "dealer_ads.html", {"products": product, "category_name": category_name})
+    return render(request, "dealer_ads.html", {"products": product, "category_name": category_name, 'cash_course': exchange()})
 
 
 def registration(request):
@@ -99,9 +99,9 @@ def registration(request):
         is_dealer = request.POST.get("dealer")
         if User.objects.filter(username=username).exists():
             return render(request, "registration/registration.html",
-                          {"form": form, "error": "User " + username + " already exists!"})
+                          {"form": form, "error": "User " + username + " already exists!", 'cash_course': exchange()})
         if password1 != password2:
-            return render(request, "registration/registration.html", {"form": form, "error": "Passwords do not match!"})
+            return render(request, "registration/registration.html", {"form": form, "error": "Passwords do not match!", 'cash_course': exchange()})
         new_user = User(username=username, email=email)
         new_user.set_password(password1)
         new_user.save()
@@ -111,7 +111,7 @@ def registration(request):
             return HttpResponsePermanentRedirect("/dealer_registration/")
         return HttpResponsePermanentRedirect("/")
     else:
-        return render(request, "registration/registration.html", {"form": form})
+        return render(request, "registration/registration.html", {"form": form, 'cash_course': exchange()})
 
 
 def dealer_registration(request):
@@ -130,7 +130,7 @@ def dealer_registration(request):
         except ObjectDoesNotExist:
             initial_dict = None
         form = RegistrationDealer(initial=initial_dict)
-        return render(request, "registration/edit.html", {"form": form})
+        return render(request, "registration/edit.html", {"form": form, 'cash_course': exchange()})
 
 
 def search(request):
@@ -153,7 +153,7 @@ def search(request):
         'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
 
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[3])
-    return render(request, "search.html", {"products": product})
+    return render(request, "search.html", {"products": product, 'cash_course': exchange()})
 
 
 def add_ad(request, category):
@@ -177,7 +177,7 @@ def add_ad(request, category):
     else:
         if request.GET.get('id'):
             form = form(initial={'product': request.GET.get('id')})
-        return render(request, "new_ad.html", {"form": form, "category": category})
+        return render(request, "new_ad.html", {"form": form, "category": category, 'cash_course': exchange()})
 
 
 def add_product(request, category):
@@ -202,8 +202,8 @@ def add_product(request, category):
         form(request.POST, request.FILES).save()
         return HttpResponsePermanentRedirect('/ads/' + category)
     else:
-        return render(request, "new_ad.html", {"form": form, "category": category})
+        return render(request, "new_ad.html", {"form": form, "category": category, 'cash_course': exchange()})
 
 
 def producer(request, id):
-    return render(request, "producer.html", {"producer": Producer.objects.get(id=id)})
+    return render(request, "producer.html", {"producer": Producer.objects.get(id=id), 'cash_course': exchange()})
