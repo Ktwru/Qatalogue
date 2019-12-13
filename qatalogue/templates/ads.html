@@ -10,13 +10,13 @@
 {% block content%}
     <a href="/ads/{{category}}/add">ADD</a>
     {% for obj in filter.qs %}
-        <li>    <img src="{{ obj.pic.url }}" height="100"/>
+        <div class="ad">    <img src="{{ obj.pic.url }}" height="100"/>
 
             <a href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
         .year-{{obj.year}}.{{obj.get_type_display}}.volume-
         {{obj.volume}}.power-{{obj.power}}.
             {{obj.get_drive_display}}{{obj.get_cylinders_display}}{% if obj.cylinders %}-cylinders {% endif %}
             .ads-count-{{obj.ads}}.min-price-{{obj.min}}
-        </li>
+        </div>
     {% endfor %}
 {% endblock content %}

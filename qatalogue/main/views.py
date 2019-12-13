@@ -12,7 +12,10 @@ import requests
 
 
 def exchange():
-    return requests.get('https://belarusbank.by/api/kursExchange', params={'city': 'Минск'}).json()[0]
+    try:
+        return requests.get('https://belarusbank.by/api/kursExchange', params={'city': 'Минск'}).json()[0]
+    except requests.ConnectionError:
+        return {'USD_in': '[error]', 'EUR_in': '[error]'}
 
 
 def main_paige(request):

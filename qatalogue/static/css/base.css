@@ -169,3 +169,8 @@ th.h_m_th:hover {
     min-height: 100%;
     background-color: white;
 }
+
+.product {
+    position: relative;
+    border: 1px solid grey;
+}
