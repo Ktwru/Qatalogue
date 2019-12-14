@@ -172,5 +172,62 @@ th.h_m_th:hover {
 
 .product {
     position: relative;
-    border: 1px solid grey;
+    left: 1%;
+    width: 98%;
+    margin-top: 1%;
 }
+
+.product_pic {
+    position: relative;
+    top: 0%;
+    left: 0%;
+    width: 20%;
+    height: 150px;
+}
+
+a.product_name {
+    position: absolute;
+    top: 2%;
+    left: 23%;
+    color: #3b0400;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+a.product_name:hover {
+    color: white;
+    background-color: #b50e02;
+}
+
+.product_attributes {
+    position: absolute;
+    top: 20%;
+    left: 23%;
+    width: 45%;
+}
+
+.product_deal {
+    position: absolute;
+    top: 2%;
+    left: 72%;
+    height: 46%;
+    width: 25%;
+}
+
+a.product_add {
+    position: relative;
+    margin-top: 5%;
+    left: 1%;
+    color: #3b0400;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #9c0b00;
+}
+
+a.product_add:hover {
+    color: white;
+    background-color: #b50e02;
+}
+
+

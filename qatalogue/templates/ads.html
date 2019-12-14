@@ -8,15 +8,30 @@
     </form></table>
 {% endblock option%}
 {% block content%}
-    <a href="/ads/{{category}}/add">ADD</a>
-    {% for obj in filter.qs %}
-        <div class="ad">    <img src="{{ obj.pic.url }}" height="100"/>
+    <a class="product_add" href="/ads/{{category}}/add">ADD new</a>
 
-            <a href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
-        .year-{{obj.year}}.{{obj.get_type_display}}.volume-
-        {{obj.volume}}.power-{{obj.power}}.
-            {{obj.get_drive_display}}{{obj.get_cylinders_display}}{% if obj.cylinders %}-cylinders {% endif %}
-            .ads-count-{{obj.ads}}.min-price-{{obj.min}}
+    {% for obj in filter.qs %}
+        <div class="product">
+
+            <div class="product_pic"><img src="{{ obj.pic.url }}" width="100%" align="center"/></div>
+
+            <a class="product_name" href="/ads/{{category}}/{{obj.id}}">{{ obj.producer }} {{ obj.model }}</a>
+
+            <div class="product_attributes">
+                {% if category_name == 'Cars' %}
+                    Year - {{obj.year}}, {{obj.get_type_display}}, volume - {{obj.volume}}, power- {{obj.power}}
+                    , drive unit - {{obj.get_drive_display}}
+                {% elif category_name == 'Motorcycles' %}
+                    {{obj.get_type_display}}, {{obj.cylinders}} cylinders, volume - {{obj.volume}}
+                    , power - {{obj.power}}
+                {% elif category_name == 'Scooters' %}
+                    Maximal speed - {{obj.max_speed}}, power - {{obj.power}}, battery capacity - {{obj.battery_capacity}}
+                {% endif %}
+            </div>
+            <table class="product_deal"><tr>
+                <th>{{obj.ads}}{% if obj.ads == 1 %} ad{% else %} ads{% endif %}</th>
+                <th>{% if obj.min%}from {{obj.min}} USD{% endif %}</th>
+            </tr></table>
         </div>
     {% endfor %}
 {% endblock content %}
