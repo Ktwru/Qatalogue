@@ -205,9 +205,11 @@ a.product_name:hover {
     top: 20%;
     left: 23%;
     width: 45%;
+    color: #545454;
 }
 
 .product_deal {
+    color: #3b0400;
     position: absolute;
     top: 2%;
     left: 72%;
@@ -216,8 +218,10 @@ a.product_name:hover {
 }
 
 a.product_add {
+    display: block;
+    width: 10%;
     position: relative;
-    margin-top: 5%;
+    margin-top: 1%;
     left: 1%;
     color: #3b0400;
     text-decoration: none;
@@ -230,4 +234,84 @@ a.product_add:hover {
     background-color: #b50e02;
 }
 
+.one_pic {
+    position: relative;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    left: 1%;
+    float: left;
+    width: 50%;
+}
 
+.one_attributes {
+    position: absolute;
+    left: 52%;
+    top: 9%;
+    color: #545454;
+    width: 40%;
+}
+
+.one_name {
+    color: #3b0400;
+    position: absolute;
+    margin-top: 1%;
+    margin-bottom: 0%;
+    left: 52%;
+    width: 46%;
+}
+
+a.one_add {
+    display: block;
+    width: 7%;
+    position: relative;
+    margin-top: 22%;
+    right: 20%;
+    float: right;
+    color: #3b0400;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #9c0b00;
+}
+
+a.one_add:hover {
+    color: white;
+    background-color: #b50e02;
+}
+
+.deal {
+    position:relative;
+    margin: 1%;
+    width: 98%;
+}
+
+.deal_dealer {
+    width: 20%;
+}
+
+.deal_price {
+    color: #3b0400;
+    font-size: 36px;
+    width: 25%;
+}
+
+.deal_date {
+    text-align: left;
+    color: #545454;
+}
+
+.deal_desc {
+    text-align: left;
+    color: #545454;
+}
+
+.deal_dealer_a {
+    color: #3b0400;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+a.deal_dealer_a:hover {
+    color: white;
+    background-color: #b50e02;
+}
