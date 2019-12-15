@@ -75,19 +75,23 @@ def dealers(request):
 def dealer(request, name):
     cars = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__dealer').annotate(
         category=Value('cars', output_field=CharField())).filter(cars_ads__dealer__name__username=name).values_list(
-        'producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category', 'pic')
+        'producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category', 'pic',
+        'cars_ads__description')
     motorcycles = Motorcycle.objects.select_related('motorcycles_ads').prefetch_related(
         'motorcycles_ads__dealer').annotate(category=Value('motorcycles', output_field=CharField())).filter(
         motorcycles_ads__dealer__name__username=name).values_list('producer__name', 'model', 'id',
                                                                   'motorcycles_ads__price',
-                                                                  'motorcycles_ads__date', 'category', 'pic')
+                                                                  'motorcycles_ads__date', 'category', 'pic',
+                                                                  'motorcycles_ads__description')
     scooters = Scooter.objects.select_related('scooters_ads').prefetch_related('scooters_ads__dealer').annotate(
         category=Value('scooters', output_field=CharField())).filter(
         scooters_ads__dealer__name__username=name).values_list(
-        'producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category', 'pic')
+        'producer__name', 'model', 'id', 'scooters_ads__price', 'scooters_ads__date', 'category', 'pic',
+        'scooters_ads__description')
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'
-    return render(request, "dealer_ads.html", {"products": product, "category_name": category_name, 'cash_course': exchange()})
+    return render(request, "dealer_ads.html",
+                  {"products": product, "category_name": category_name, 'cash_course': exchange()})
 
 
 def registration(request):
@@ -104,7 +108,8 @@ def registration(request):
             return render(request, "registration/registration.html",
                           {"form": form, "error": "User " + username + " already exists!", 'cash_course': exchange()})
         if password1 != password2:
-            return render(request, "registration/registration.html", {"form": form, "error": "Passwords do not match!", 'cash_course': exchange()})
+            return render(request, "registration/registration.html",
+                          {"form": form, "error": "Passwords do not match!", 'cash_course': exchange()})
         new_user = User(username=username, email=email)
         new_user.set_password(password1)
         new_user.save()

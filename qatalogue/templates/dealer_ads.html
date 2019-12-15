@@ -3,14 +3,22 @@
 {% block header_name %}{{category_name}}{% endblock header_name %}
 
 {% block content%}
-    <a href="/ads/cars/add">ADD car</a>
-    <a href="/ads/motorcycles/add">ADD motorcycle</a>
-    <a href="/ads/scooters/add">ADD scooter</a>
-    {% for product in products %}
-        <li>    <img src="/media/{{ product.6 }}" height="100"/>
+    <table style="margin-left: 1%;"><tr>
+        <th><a class="product_add" href="/ads/cars/add">ADD car</a></th>
+        <th><a class="product_add" href="/ads/motorcycles/add">ADD motorcycle</a></th>
+        <th><a class="product_add" href="/ads/scooters/add">ADD scooter</a></th>
+    </tr></table>
 
-            <a href="/ads/{{product.5}}/{{product.2}}">{{ product.0 }} {{ product.1 }}</a>
-         price: {{product.3}}, {{product.4}}
-        </li>
+    {% for product in products %}
+    <div class="product">
+        <div class="product_pic"><img src="/media/{{ product.6 }}" width="100%"/></div>
+
+        <a class="product_name" href="/ads/{{product.5}}/{{product.2}}">{{ product.0 }} {{ product.1 }}</a>
+        <div class="product_attributes">{{product.7}}</div>
+        <table class="product_deal"><tr>
+                <th>{{product.3}} USD</th>
+                <th>{{product.4}}</th>
+        </tr></table>
+    </div>
     {% endfor %}
 {% endblock content %}

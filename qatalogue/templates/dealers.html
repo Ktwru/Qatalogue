@@ -2,9 +2,12 @@
 {% block title %}Dealers{% endblock title %}
 {% block header_name %}Dealers{% endblock header_name %}
 {% block content %}
-    <h1>Dealers:</h1>
     {%for dealer in dealers%}
-    <li>{{dealer.0}}, rating: {{dealer.1}},
-        website: {{dealer.2}}, {{dealer.4}} ads, {{dealer.3}}</li><a href="/ads/dealers/{{dealer.0}}">{{dealer.0}} ads</a>
+    <table class="deal">
+        <tr><th class="dealer_name"><a href="/ads/dealers/{{dealer.0}}" class="deal_dealer_a">{{dealer.0}} [{{dealer.4}} ads]</a></th>
+            <th class="dealer_name">rating: {{dealer.1}}</th>
+            <th class="dealer_website"><a style="color: #545454;" href="{{dealer.2}}">{{dealer.2}}</a></th></tr>
+    </table>
+        <div class="dealer_desc">{{dealer.3}}</div>
     {%endfor%}
 {% endblock content %}
