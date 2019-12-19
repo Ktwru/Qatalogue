@@ -77,6 +77,8 @@ def dealers(request):
 
 
 def dealer(request, name):
+    dealer = Dealer.objects.select_related('name').annotate(
+        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).get(name__username=name)
     cars = Car.objects.select_related('cars_ads').prefetch_related('cars_ads__dealer').annotate(
         category=Value('cars', output_field=CharField())).filter(cars_ads__dealer__name__username=name).values_list(
         'producer__name', 'model', 'id', 'cars_ads__price', 'cars_ads__date', 'category', 'pic',
@@ -95,7 +97,7 @@ def dealer(request, name):
     product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[4])
     category_name = name + ' ads'
     return render(request, "dealer_ads.html",
-                  {"products": product, "category_name": category_name, 'cash_course': exchange()})
+                  {"products": product, "dealer": dealer, "category_name": category_name, 'cash_course': exchange()})
 
 
 def registration(request):
@@ -236,4 +238,8 @@ def rate(request):
             Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating') + new_review.rate)
         new_review.save()
     form = form(initial={'dealer': request.GET.get('id')})
-    return render(request, "review.html", {"form": form, 'cash_course': exchange()})
+    reviews = Review.objects.select_related('user').filter(
+        dealer=request.GET.get('id'))
+    dealer = Dealer.objects.select_related('name').annotate(
+        ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).get(id=request.GET.get('id'))
+    return render(request, "review.html", {"form": form, "dealer": dealer, "reviews": reviews, 'cash_course': exchange()})

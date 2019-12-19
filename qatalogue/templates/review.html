@@ -2,6 +2,14 @@
 {% block title %}Reviewing{% endblock title %}
 {% block header_name %}Reviewing{% endblock header_name %}
 {% block content %}
+    <table class="deal">
+        <tr><th class="dealer_name"><a href="/ads/dealers/{{dealer.name}}" class="deal_dealer_a">{{dealer.name}} [{{dealer.ads}} ads]</a></th>
+            <th class="dealer_rating">rating: {{dealer.rating}}</th>
+            <th><a class="dealer_rate" href="/dealers/rate?id={{dealer.id}}">rate/check reviews</a></th>
+            <th class="dealer_website"><a style="color: #545454;" href="{{dealer.website}}">{{dealer.website}}</a></th></tr>
+    </table>
+        <div class="dealer_desc">{{dealer.description}}</div>
+
     <form method = "POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
@@ -9,4 +17,14 @@
     </table>
     <input type="submit" value="confirm">
     </form>
+
+    {% for review in reviews %}
+    <table class="deal">
+        <tr><th class="dealer_name">{{review.user.username}}</th>
+            <th class="dealer_rating">{{review.get_rate_display}}</th>
+            <th class="dealer_website"><div style="color: #545454;">{{review.date}}</div></th></tr>
+    </table>
+        <div class="dealer_desc">{{review.comment}}</div>
+
+    {% endfor %}
 {% endblock content %}
