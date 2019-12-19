@@ -48,13 +48,16 @@ def ads(request, category):
 def ad(request, category, id):
     if category == 'cars':
         product = Car.objects.get(id=id)
-        ads = CarAd.objects.filter(product=product)
+        ads = CarAd.objects.select_related('dealer').filter(
+            product=product)
     elif category == 'motorcycles':
         product = Motorcycle.objects.get(id=id)
-        ads = MotorcycleAd.objects.filter(product=product)
+        ads = MotorcycleAd.objects.select_related('dealer').filter(
+            product=product)
     elif category == 'scooters':
         product = Scooter.objects.get(id=id)
-        ads = ScooterAd.objects.filter(product=product)
+        ads = ScooterAd.objects.select_related('dealer').filter(
+            product=product)
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
     return render(request, "ad.html", {"product": product, "ads": ads, "category": category, 'cash_course': exchange()})
@@ -225,9 +228,12 @@ def rate(request):
     if request.method == 'POST':
         new_review = form(request.POST).save(commit=False)
         new_review.user = User.objects.get(id=request.user.id)
+        try:
+            past = Review.objects.get(user=new_review.user)
+            Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating') + new_review.rate - past.rate)
+            past.delete()
+        except ObjectDoesNotExist:
+            Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating') + new_review.rate)
         new_review.save()
-        Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating')+new_review.rate)
-        return HttpResponsePermanentRedirect('/dealers/')
-    else:
-        form = form(initial={'dealer': request.GET.get('id')})
-        return render(request, "review.html", {"form": form, 'cash_course': exchange()})
+    form = form(initial={'dealer': request.GET.get('id')})
+    return render(request, "review.html", {"form": form, 'cash_course': exchange()})

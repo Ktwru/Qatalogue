@@ -25,7 +25,7 @@
         <a class="one_add" href="/ads/{{category}}/add?id={{product.id}}">ADD ad</a>
     {%for ad in ads%}
     <table class="deal">
-        <tr><th class="deal_dealer"><a class="deal_dealer_a" href="/ads/dealers/{{ad.dealer}}">{{ad.dealer}}</a></th><th class="deal_date">{{ad.date}}</th></tr>
+        <tr><th class="deal_dealer"><a class="deal_dealer_a" href="/ads/dealers/{{ad.dealer}}">{{ad.dealer}}[{{ad.dealer.rating}}]</a></th><th class="deal_date">{{ad.date}}</th></tr>
         <tr><th class="deal_price">{{ad.price}} USD</th><th class="deal_desc">{{ad.description}}</th></tr>
     </table>
     {%endfor%}
