@@ -2,6 +2,8 @@
 {% block title %}Dealers{% endblock title %}
 {% block header_name %}Dealers{% endblock header_name %}
 {% block content %}
+    <a class="product_add" href="/dealer_registration/"> register as a dealer / edit dealer information </a>
+
     {%for dealer in dealers%}
     <table class="deal">
         <tr><th class="dealer_name"><a href="/ads/dealers/{{dealer.0}}" class="deal_dealer_a">{{dealer.0}} [{{dealer.4}} ads]</a></th>

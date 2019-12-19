@@ -130,7 +130,7 @@ def registration(request):
 
 def dealer_registration(request):
     if not request.user.is_authenticated:
-        return HttpResponseBadRequest("<h1>Bad request</h1>")
+        return HttpResponseBadRequest("<h1>You are not authenticated</h1>")
     if request.method == 'POST':
         website = request.POST.get("website")
         description = request.POST.get("description")

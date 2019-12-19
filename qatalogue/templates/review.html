@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Reviewing{% endblock title %}
-{% block header_name %}Reviewing{% endblock header_name %}
+{% block header_name %}{{dealer.name.username}} reviews{% endblock header_name %}
 {% block content %}
     <table class="deal">
         <tr><th class="dealer_name"><a href="/ads/dealers/{{dealer.name}}" class="deal_dealer_a">{{dealer.name}} [{{dealer.ads}} ads]</a></th>
