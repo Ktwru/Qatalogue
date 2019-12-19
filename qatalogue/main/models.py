@@ -99,3 +99,13 @@ class Dealer(models.Model):
         return self.name.username + val
 
 
+class Review(models.Model):
+    RATE_CHOICES = ((-2, 'very bad'), (-1, 'bad'), (0, 'normal'), (1, 'good'), (2, 'very good'))
+    dealer = models.ForeignKey(Dealer, models.CASCADE, default='')
+    user = models.ForeignKey(User, models.CASCADE)
+    comment = models.TextField(blank=True, null=True)
+    rate = models.SmallIntegerField(default=0, choices=RATE_CHOICES)
+    date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.dealer.name.username + ' ' + str(self.rate) + ' ' + self.user.username

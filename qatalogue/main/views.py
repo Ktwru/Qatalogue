@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseBadRequest, HttpResponsePermanentRedirect
 from main.models import *
-from django.db.models import Count, Min, Value, CharField, Q
+from django.db.models import Count, Min, Value, CharField, Q, F
 from itertools import chain
 from .forms import RegistrationUser, RegistrationDealer
 from django.contrib.auth import authenticate, login
@@ -62,12 +62,13 @@ def ad(request, category, id):
 
 def dealers(request):
     dealers = Dealer.objects.select_related('name', 'scooters_ads', 'motorcycles_ads', 'cars_ads').prefetch_related(
-        'name_username', 'scooters_ads', 'motorcycles_ads', 'cars_ads').annotate(
+        'name__username', 'scooters_ads', 'motorcycles_ads', 'cars_ads', 'id').annotate(
         ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).all().values_list('name__username',
                                                                                                     'rating',
                                                                                                     'website',
                                                                                                     'description',
-                                                                                                    'ads').order_by(
+                                                                                                    'ads',
+                                                                                                    'id').order_by(
         '-rating')
     return render(request, "dealers.html", {"dealers": dealers, 'cash_course': exchange()})
 
@@ -213,5 +214,20 @@ def add_product(request, category):
         return render(request, "new_ad.html", {"form": form, "category": category, 'cash_course': exchange()})
 
 
-def producer(request, id):
-    return render(request, "producer.html", {"producer": Producer.objects.get(id=id), 'cash_course': exchange()})
+def producers(request):
+    return render(request, "producers.html", {'producers': Producer.objects.all(), 'cash_course': exchange()})
+
+
+def rate(request):
+    if Dealer.objects.filter(name=request.user.id).exists():
+        return HttpResponseBadRequest("<h1>Dealers cant rate dealers!</h1>")
+    form = modelform_factory(Review, fields=('dealer', 'rate', 'comment'))
+    if request.method == 'POST':
+        new_review = form(request.POST).save(commit=False)
+        new_review.user = User.objects.get(id=request.user.id)
+        new_review.save()
+        Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating')+new_review.rate)
+        return HttpResponsePermanentRedirect('/dealers/')
+    else:
+        form = form(initial={'dealer': request.GET.get('id')})
+        return render(request, "review.html", {"form": form, 'cash_course': exchange()})

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Producers{% endblock title %}
+{% block header_name %}Producers{% endblock header_name %}
+{% block content %}
+    {%for producer in producers%}
+    <table class="deal">
+        <tr><th class="dealer_name">{{producer.name}}</th>
+            <th class="dealer_name">[{{producer.country}}]</th>
+            <th class="dealer_website"><a style="color: #545454;" href="{{producer.website}}">{{producer.website}}</a></th></tr>
+    </table>
+    {%endfor%}
+{% endblock content %}

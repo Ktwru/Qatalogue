@@ -5,7 +5,7 @@
     {%for dealer in dealers%}
     <table class="deal">
         <tr><th class="dealer_name"><a href="/ads/dealers/{{dealer.0}}" class="deal_dealer_a">{{dealer.0}} [{{dealer.4}} ads]</a></th>
-            <th class="dealer_name">rating: {{dealer.1}}</th>
+            <th class="dealer_name">rating: {{dealer.1}} <a class="product_add" href="/dealers/rate?id={{dealer.5}}">Rate</a></th>
             <th class="dealer_website"><a style="color: #545454;" href="{{dealer.2}}">{{dealer.2}}</a></th></tr>
     </table>
         <div class="dealer_desc">{{dealer.3}}</div>
