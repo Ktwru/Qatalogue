@@ -2,7 +2,13 @@
 {% block title %}Search results{% endblock title %}
 {% block content %}
     {% for product in products %}
-            <li>    <img src="/media/{{ product.6 }}" height="100"/>
-     <a href="/ads/{{product.2}}/{{product.3}}">{{product.0}} {{product.1}}, {{product.4}} ads, min price: {{product.5}}</a> </li>
+    <div class="product">
+        <div class="product_pic"><img src="/media/{{product.6}}" width="100%" align="center"/></div>
+        <a class="product_name" href="/ads/{{product.2}}/{{product.3}}">{{product.0}} {{product.1}}</a>
+        <table class="product_deal"><tr>
+            <th>{{product.4}}{% if product.4 == 1 %} ad{% else %} ads{% endif %}</th>
+            <th>{% if product.5%}from {{product.5}} USD{% endif %}</th>
+        </tr></table>
+    </div>
     {% endfor %}
 {% endblock content %}
