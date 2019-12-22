@@ -15,7 +15,7 @@
     {% endif %}
 {% endif %}
 
-<form method="post" action="{% url 'login' %}">
+<form style="margin-left: 1%" method="post" action="{% url 'login' %}">
 {% csrf_token %}
 
 <div>
@@ -28,7 +28,7 @@
 </div>
 
 <div>
-  <input type="submit" value="login" />
+  <input class="but" type="submit" value="login" />
   <input type="hidden" name="next" value="{{ next }}" />
 </div>
 </form>

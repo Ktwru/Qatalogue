@@ -2,6 +2,12 @@ html{
     background-color: #8a8a8a;
 }
 
+input[type=submit] {
+    color: white;
+    background-color: #9c0b00;
+    margin-left: 1%;
+}
+
 .header {
     position: absolute;
     left: 0%;
