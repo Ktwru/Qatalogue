@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8"/>
-    <title>Dealer</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Qatalogue{% endblock title %}
+{% block header_name %}Qatalogue{% endblock header_name %}
+{% block content %}
     {{user.get_username}}
     <form method = "POST" enctype="multipart/form-data" class="NewThread">
     {% csrf_token %}
@@ -12,6 +9,5 @@
     {{form}}
     </table>
     <input type="submit" value="confirm" class="confirm">
-</form>
-</body>
-</html>
+    </form>
+{% endblock content %}

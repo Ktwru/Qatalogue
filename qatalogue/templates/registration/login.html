@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8"/>
-    <title>login</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Logging in{% endblock title %}
+{% block header_name %}Logging in{% endblock header_name %}
+{% block content %}
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -39,5 +36,4 @@
 {# Assumes you setup the password_reset view in your URLconf #}
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
-</body>
-</html>
+{% endblock content %}
