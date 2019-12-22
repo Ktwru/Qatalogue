@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'qatalogue.urls'
@@ -138,3 +140,8 @@ MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = '/'
 
 FILTERS_DISABLE_HELP_TEXT = False
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
