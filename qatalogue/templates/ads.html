@@ -8,7 +8,10 @@
     </form></table>
 {% endblock option%}
 {% block content%}
-    <a class="product_add" href="/ads/{{category}}/add">ADD new</a>
+    <table style="margin-left: 1%;"><tr>
+        <th><a class="product_add" href="/ads/{{category}}/add">new AD</a></th>
+        <th><a class="product_add" href="/ads/{{category}}/add_product">new product</a></th>
+    </tr></table>
 
     {% for obj in filter.qs %}
         <div class="product">

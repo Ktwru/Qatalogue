@@ -28,7 +28,7 @@ def ads(request, category):
             ads=Count('cars_ads'), min=Min('cars_ads__price')).all()
         category_name = 'Cars'
         product_filter = CarFilter(request.GET, queryset=product)
-    elif category == 'motorcycles':  # ------------------------------------------
+    elif category == 'motorcycles':
         product = Motorcycle.objects.select_related().prefetch_related(
         ).annotate(
             ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).all()
