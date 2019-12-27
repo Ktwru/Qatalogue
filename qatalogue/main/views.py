@@ -25,7 +25,7 @@ def main_paige(request):
 def ads(request, category):
     if category == 'cars':
         product = Car.objects.select_related().prefetch_related().annotate(
-            ads=Count('cars_ads'), min=Min('cars_ads__price')).all()
+            ads=Count('cars_ads'), min=Min('cars_ads__price')).order_by('-id')
         category_name = 'Cars'
         product_filter = CarFilter(request.GET, queryset=product)
     elif category == 'motorcycles':
@@ -231,15 +231,17 @@ def rate(request):
         new_review = form(request.POST).save(commit=False)
         new_review.user = User.objects.get(id=request.user.id)
         try:
-            past = Review.objects.get(user=new_review.user)
+            past = Review.objects.get(user=new_review.user, dealer=new_review.dealer)
             Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating') + new_review.rate - past.rate)
             past.delete()
         except ObjectDoesNotExist:
             Dealer.objects.filter(id=new_review.dealer.id).update(rating=F('rating') + new_review.rate)
         new_review.save()
+    if not request.GET.get('id'):
+        return HttpResponsePermanentRedirect('/dealers/')
     form = form(initial={'dealer': request.GET.get('id')})
     reviews = Review.objects.select_related('user').filter(
-        dealer=request.GET.get('id'))
+        dealer=request.GET.get('id')).order_by('-date')
     dealer = Dealer.objects.select_related('name').annotate(
         ads=Count('scooters_ads') + Count('cars_ads') + Count('motorcycles_ads')).get(id=request.GET.get('id'))
     return render(request, "review.html", {"form": form, "dealer": dealer, "reviews": reviews, 'cash_course': exchange()})
