@@ -48,7 +48,7 @@ def ads(request, category):
 def ad(request, category, id):
     if category == 'cars':
         product = Car.objects.get(id=id)
-        ads = CarAd.objects.select_related('dealer').filter(
+        ads = CarAd.objects.select_related('dealer', 'dealer__name').filter(
             product=product)
     elif category == 'motorcycles':
         product = Motorcycle.objects.get(id=id)
