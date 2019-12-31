@@ -47,16 +47,16 @@ def ads(request, category):
 
 def ad(request, category, id):
     if category == 'cars':
-        product = Car.objects.get(id=id)
+        product = Car.objects.select_related('producer').get(id=id)
         ads = CarAd.objects.select_related('dealer', 'dealer__name').filter(
             product=product)
     elif category == 'motorcycles':
-        product = Motorcycle.objects.get(id=id)
-        ads = MotorcycleAd.objects.select_related('dealer').filter(
+        product = Motorcycle.objects.select_related('producer').get(id=id)
+        ads = MotorcycleAd.objects.select_related('dealer', 'dealer__name').filter(
             product=product)
     elif category == 'scooters':
-        product = Scooter.objects.get(id=id)
-        ads = ScooterAd.objects.select_related('dealer').filter(
+        product = Scooter.objects.select_related('producer').get(id=id)
+        ads = ScooterAd.objects.select_related('dealer', 'dealer__name').filter(
             product=product)
     else:
         return HttpResponseBadRequest("<h1>Bad Request</h1>")
