@@ -53,4 +53,4 @@
 поставить флажок в свойстве 'valid'.
 
 ### Каталог продукции
-[alt text](screenshots/Products.png "Cars: type - coupe, drive unit - rear and foward ")
+![](screenshots/Products.png)
