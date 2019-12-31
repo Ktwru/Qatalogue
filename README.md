@@ -53,4 +53,12 @@
 поставить флажок в свойстве 'valid'.
 
 ### Каталог продукции
-![](screenshots/Products.png)
+![](https://github.com/Ktwru/Qatalogue/blob/master/screenshots/Products.PNG "Cars, type - coupe, drive unit: rear and foward")
+
+На страницах cars, motorcycles и scooters выводится характеристика имеющейся в базе данных продукции, а также информация о количестве
+объявлений о ее продаже и минимальная цена.
+
+Слева отображена форма для фильтрации продукции (DRF django-filter).
+
+### Отображение объявлений
+![]()
