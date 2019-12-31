@@ -53,6 +53,7 @@
 поставить флажок в свойстве 'valid'.
 
 ### Каталог продукции
+
 ![](https://github.com/Ktwru/Qatalogue/blob/master/screenshots/Products.PNG "Cars, type - coupe, drive unit: rear and foward")
 
 На страницах cars, motorcycles и scooters выводится характеристика имеющейся в базе данных продукции, а также информация о количестве
@@ -60,5 +61,17 @@
 
 Слева отображена форма для фильтрации продукции (DRF django-filter).
 
-### Отображение объявлений
-![]()
+### Объявления
+
+![](https://github.com/Ktwru/Qatalogue/blob/master/screenshots/Product.PNG)
+
+Отображается информация о продукте, а также все объявления о его продаже.
+
+### Диллеры
+На странице /dealers/ содежиться информация о подтвержденных диллерах, количество их объявлений и их рейтинг.
+
+Все объявления диллеров во всех категориях отображаются по адресу /ads/dealers/[диллер]
+
+Только простые пользователи могут оценивать и оставлять отзывы о диллерах - /dealers/rate[id]:
+
+![](https://github.com/Ktwru/Qatalogue/blob/master/screenshots/Rate.PNG)
