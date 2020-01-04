@@ -9,7 +9,8 @@
 ## Развертывание и настройка
 ### 1. Создать и запустить виртуальное окружение
 > python -m venv [название]
-[название]\Scripts\activate
+
+>[название]\Scripts\activate
 
 ### 2. Установить требуемые библиотеки
 > python -m pip install --upgrade pip
