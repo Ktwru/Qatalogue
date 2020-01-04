@@ -148,26 +148,29 @@ def dealer_registration(request):
 
 
 def search(request):
-    mark = request.GET.get('mark')
-    cars = Car.objects.select_related('cars_ads', 'producer').prefetch_related('producer__name').annotate(
-        category=Value('cars', output_field=CharField()),
-        ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(
-        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
-        'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
-    motorcycles = Motorcycle.objects.select_related('motorcycles_ads', 'producer').prefetch_related(
-        'producer__name').annotate(
-        category=Value('motorcycles', output_field=CharField()),
-        ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).filter(
-        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
-        'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
-    scooters = Scooter.objects.select_related('scooters_ads', 'producer').prefetch_related('producer__name').annotate(
-        category=Value('scooters', output_field=CharField()),
-        ads=Count('scooters_ads'), min=Min('scooters_ads__price')).filter(
-        Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
-        'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
+    if request.GET.get('mark'):
+        mark = request.GET.get('mark')
+        cars = Car.objects.select_related('cars_ads', 'producer').prefetch_related('producer__name').annotate(
+            category=Value('cars', output_field=CharField()),
+            ads=Count('cars_ads'), min=Min('cars_ads__price')).filter(
+            Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+            'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
+        motorcycles = Motorcycle.objects.select_related('motorcycles_ads', 'producer').prefetch_related(
+            'producer__name').annotate(
+            category=Value('motorcycles', output_field=CharField()),
+            ads=Count('motorcycles_ads'), min=Min('motorcycles_ads__price')).filter(
+            Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+            'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
+        scooters = Scooter.objects.select_related('scooters_ads', 'producer').prefetch_related('producer__name').annotate(
+            category=Value('scooters', output_field=CharField()),
+            ads=Count('scooters_ads'), min=Min('scooters_ads__price')).filter(
+            Q(producer__name__icontains=mark) | Q(model__icontains=mark)).values_list(
+            'producer__name', 'model', 'category', 'id', 'ads', 'min', 'pic')
 
-    product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[3])
-    return render(request, "search.html", {"products": product, 'cash_course': exchange()})
+        product = sorted(chain(cars, motorcycles, scooters), key=lambda instance: instance[3])
+    else:
+        product = mark = None
+    return render(request, "search.html", {"products": product, 'cash_course': exchange(), 'search_initial': mark})
 
 
 def add_ad(request, category):
